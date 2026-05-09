@@ -162,46 +162,27 @@ function shuffle(array){
   return [...array].sort(()=>Math.random()-0.5);
 }
 
-function normalizeAndShuffleOptions(question){
-  const originalEntries = Object.entries(question.choices);
-  const shuffled = shuffle(originalEntries);
-  const labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
 
-  const newChoices = {};
-  let newAnswer = '';
-
-  shuffled.forEach(([oldKey,value],index)=>{
-    const newKey = labels[index];
-    newChoices[newKey] = value;
-
-    if(question.answer.includes(oldKey)){
-      newAnswer += newKey;
-    }
-  });
-
-  question.choices = newChoices;
-  question.answer = newAnswer.split('').sort().join('');
-
-  return question;
-}
 
 function startExam(){
-  const count=parseInt(questionCount.value);
-  if(!count || count<1 || count>allQuestions.length){
+  const count = parseInt(questionCount.value);
+
+  if(!count || count < 1 || count > allQuestions.length){
     alert('Enter valid count');
     return;
   }
 
+  // Shuffle only questions (NOT options)
   questions = shuffle(allQuestions)
-    .slice(0,count)
-    .map(q=>normalizeAndShuffleOptions({...q}));
+    .slice(0, count)
+    .map(q => ({ ...q }));
 
-  userAnswers=[];
-  currentIndex=0;
+  userAnswers = [];
+  currentIndex = 0;
 
   setup.classList.add('hidden');
   exam.classList.remove('hidden');
-  runningExamTitle.innerText=exams[selectedExam].title;
+  runningExamTitle.innerText = exams[selectedExam].title;
 
   renderQuestion();
 }
