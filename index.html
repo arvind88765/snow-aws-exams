@@ -252,6 +252,35 @@ function toggleOptions(index){
   document.getElementById(`options-review-${index}`).classList.toggle('hidden');
 }
 
+function showReviewSection(type){
+  const correctSection = document.getElementById('correct-section');
+  const wrongSection = document.getElementById('wrong-section');
+
+  const correctBtn = document.getElementById('correct-btn');
+  const wrongBtn = document.getElementById('wrong-btn');
+
+  if(type === 'correct'){
+    correctSection.classList.remove('hidden');
+    wrongSection.classList.add('hidden');
+
+    correctBtn.classList.add('bg-green-600','text-white');
+    correctBtn.classList.remove('border');
+
+    wrongBtn.classList.remove('bg-red-600','text-white');
+    wrongBtn.classList.add('border');
+  } else {
+    wrongSection.classList.remove('hidden');
+    correctSection.classList.add('hidden');
+
+    wrongBtn.classList.add('bg-red-600','text-white');
+    wrongBtn.classList.remove('border');
+
+    correctBtn.classList.remove('bg-green-600','text-white');
+    correctBtn.classList.add('border');
+  }
+}`).classList.toggle('hidden');
+}
+
 function submitExam(){
   saveCurrentAnswer();
 
@@ -325,13 +354,27 @@ function submitExam(){
     </div>
 
     <div class="mt-8">
-      <h2 class="text-2xl font-bold mb-4 text-green-600">✅ Correct Answers Review</h2>
-      ${correctHTML || '<div class="bg-white rounded-3xl p-6 shadow-xl">No correct answers</div>'}
-    </div>
+      <div class="flex flex-wrap gap-4 mb-6">
+        <button id="wrong-btn"
+          onclick="showReviewSection('wrong')"
+          class="px-5 py-3 rounded-2xl bg-red-600 text-white font-semibold">
+          ❌ Wrong Answers
+        </button>
 
-    <div class="mt-8">
-      <h2 class="text-2xl font-bold mb-4 text-red-600">❌ Wrong Answers Review</h2>
-      ${wrongHTML || '<div class="bg-white rounded-3xl p-6 shadow-xl">No wrong answers 🎉</div>'}
+        <button id="correct-btn"
+          onclick="showReviewSection('correct')"
+          class="px-5 py-3 rounded-2xl border font-semibold">
+          ✅ Correct Answers
+        </button>
+      </div>
+
+      <div id="wrong-section">
+        ${wrongHTML || '<div class="bg-white rounded-3xl p-6 shadow-xl">No wrong answers 🎉</div>'}
+      </div>
+
+      <div id="correct-section" class="hidden">
+        ${correctHTML || '<div class="bg-white rounded-3xl p-6 shadow-xl">No correct answers</div>'}
+      </div>
     </div>`;
 }
 
