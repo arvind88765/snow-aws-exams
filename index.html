@@ -162,27 +162,46 @@ function shuffle(array){
   return [...array].sort(()=>Math.random()-0.5);
 }
 
+function normalizeAndShuffleOptions(question){
+  const originalEntries = Object.entries(question.choices);
+  const shuffled = shuffle(originalEntries);
+  const labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
 
+  const newChoices = {};
+  let newAnswer = '';
+
+  shuffled.forEach(([oldKey,value],index)=>{
+    const newKey = labels[index];
+    newChoices[newKey] = value;
+
+    if(question.answer.includes(oldKey)){
+      newAnswer += newKey;
+    }
+  });
+
+  question.choices = newChoices;
+  question.answer = newAnswer.split('').sort().join('');
+
+  return question;
+}
 
 function startExam(){
-  const count = parseInt(questionCount.value);
-
-  if(!count || count < 1 || count > allQuestions.length){
+  const count=parseInt(questionCount.value);
+  if(!count || count<1 || count>allQuestions.length){
     alert('Enter valid count');
     return;
   }
 
-  // Shuffle only questions (NOT options)
   questions = shuffle(allQuestions)
-    .slice(0, count)
-    .map(q => ({ ...q }));
+    .slice(0,count)
+    .map(q=>normalizeAndShuffleOptions({...q}));
 
-  userAnswers = [];
-  currentIndex = 0;
+  userAnswers=[];
+  currentIndex=0;
 
   setup.classList.add('hidden');
   exam.classList.remove('hidden');
-  runningExamTitle.innerText = exams[selectedExam].title;
+  runningExamTitle.innerText=exams[selectedExam].title;
 
   renderQuestion();
 }
@@ -236,29 +255,27 @@ function toggleOptions(index){
 function submitExam(){
   saveCurrentAnswer();
 
-  let score=0;
-  let failedHTML='';
+  let score = 0;
+  let correctHTML = '';
+  let wrongHTML = '';
 
-  questions.forEach((q,index)=>{
-    const correct=q.answer.split('').sort().join('');
-    const user=(userAnswers[index]||'').split('').sort().join('');
+  questions.forEach((q, index) => {
+    const correct = q.answer.split('').sort().join('');
+    const user = (userAnswers[index] || '').split('').sort().join('');
 
-    if(correct===user){
-      score++;
-    } else {
-      let optionsHtml='';
+    let optionsHtml = '';
 
-      Object.entries(q.choices).forEach(([key,val])=>{
-        const isCorrect=correct.includes(key);
-        const isUser=user.includes(key);
+    Object.entries(q.choices).forEach(([key, val]) => {
+      const isCorrect = correct.includes(key);
+      const isUser = user.includes(key);
 
-        optionsHtml += `
-        <div class="p-3 rounded-xl mb-2 ${isCorrect?'bg-green-100 text-green-800':'bg-slate-100 dark:bg-slate-700'} ${isUser&&!isCorrect?'border-2 border-red-500':''}">
+      optionsHtml += `
+        <div class="p-3 rounded-xl mb-2 ${isCorrect ? 'bg-green-100 text-green-800' : 'bg-slate-100 dark:bg-slate-700'} ${isUser && !isCorrect ? 'border-2 border-red-500' : ''}">
           <strong>${key}</strong> - ${val}
         </div>`;
-      });
+    });
 
-      failedHTML += `
+    const questionBlock = `
       <div class="bg-white dark:bg-slate-800 rounded-3xl shadow-xl p-6 mb-6 fade-in">
         <h3 class="font-bold text-xl mb-4">Q${index+1}</h3>
         <p class="mb-5 leading-relaxed">${q.question_text}</p>
@@ -274,16 +291,22 @@ function submitExam(){
         <p class="mt-4"><strong>Your Answer:</strong> ${user || 'Not Answered'}</p>
         <p><strong>Correct Answer:</strong> ${correct}</p>
       </div>`;
+
+    if (correct === user) {
+      score++;
+      correctHTML += questionBlock;
+    } else {
+      wrongHTML += questionBlock;
     }
   });
 
-  const percentage=((score/questions.length)*100).toFixed(2);
-  const status=percentage>=70?'PASS':'FAIL';
+  const percentage = ((score / questions.length) * 100).toFixed(2);
+  const status = percentage >= 70 ? 'PASS' : 'FAIL';
 
   exam.classList.add('hidden');
   result.classList.remove('hidden');
 
-  result.innerHTML=`
+  result.innerHTML = `
     <div class="bg-white dark:bg-slate-800 rounded-3xl shadow-2xl p-8">
       <div class="flex flex-wrap gap-3 justify-between items-center">
         <h2 class="text-3xl font-bold">🎯 Exam Completed</h2>
@@ -294,16 +317,21 @@ function submitExam(){
       </div>
 
       <div class="grid md:grid-cols-2 gap-5 mt-8">
-        <div class="p-5 rounded-2xl bg-pink-100 text-pink-900">Correct: ${score}</div>
-        <div class="p-5 rounded-2xl bg-rose-100 text-rose-900">Wrong: ${questions.length-score}</div>
-        <div class="p-5 rounded-2xl bg-fuchsia-100 text-fuchsia-900">Percentage: ${percentage}%</div>
-        <div class="p-5 rounded-2xl bg-pink-200 text-pink-900">Status: ${status}</div>
+        <div class="p-5 rounded-2xl bg-green-100 text-green-900">Correct: ${score}</div>
+        <div class="p-5 rounded-2xl bg-red-100 text-red-900">Wrong: ${questions.length-score}</div>
+        <div class="p-5 rounded-2xl bg-blue-100 text-blue-900">Percentage: ${percentage}%</div>
+        <div class="p-5 rounded-2xl bg-purple-100 text-purple-900">Status: ${status}</div>
       </div>
     </div>
 
     <div class="mt-8">
-      <h2 class="text-2xl font-bold mb-4">📘 Failed Questions Review</h2>
-      ${failedHTML || '<div class="bg-white rounded-3xl p-6 shadow-xl">Perfect Score 🎉</div>'}
+      <h2 class="text-2xl font-bold mb-4 text-green-600">✅ Correct Answers Review</h2>
+      ${correctHTML || '<div class="bg-white rounded-3xl p-6 shadow-xl">No correct answers</div>'}
+    </div>
+
+    <div class="mt-8">
+      <h2 class="text-2xl font-bold mb-4 text-red-600">❌ Wrong Answers Review</h2>
+      ${wrongHTML || '<div class="bg-white rounded-3xl p-6 shadow-xl">No wrong answers 🎉</div>'}
     </div>`;
 }
 
