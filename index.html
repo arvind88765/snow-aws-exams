@@ -6,15 +6,13 @@
 <title>Mock Exam Portal</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
-tailwind.config = { darkMode: 'class' }
+  tailwind.config = { darkMode: 'class' }
 </script>
 <style>
-.love-particle{position:fixed;font-size:22px;pointer-events:none;animation:floatUp 6s linear infinite;opacity:.85;z-index:50}
-@keyframes floatUp{0%{transform:translateY(0) scale(.8);opacity:0}20%{opacity:1}100%{transform:translateY(-120vh) scale(1.4);opacity:0}}
-.option-card{transition:all .25s ease}
-.option-card:hover{transform:translateY(-2px)}
-.fade-in{animation:fade .35s ease}
-@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+  .love-particle{position:fixed;font-size:22px;pointer-events:none;animation:floatUp 6s linear infinite;opacity:.85;z-index:50}
+  @keyframes floatUp{0%{transform:translateY(0) scale(.8);opacity:0}20%{opacity:1}100%{transform:translateY(-120vh) scale(1.4);opacity:0}}
+  .option-card{transition:all .25s ease}
+  .option-card:hover{transform:translateY(-2px)}
 </style>
 </head>
 <body id="appBody" class="bg-gradient-to-br from-slate-100 via-slate-200 to-slate-100 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 min-h-screen text-slate-900 dark:text-white transition-all duration-500">
@@ -22,7 +20,6 @@ tailwind.config = { darkMode: 'class' }
 <div class="max-w-6xl mx-auto p-4 md:p-6">
 
   <div class="flex justify-between items-center mb-6">
-    <div id="love-layer"></div>
     <h1 id="appTitle" class="text-2xl md:text-4xl font-bold">⚡ Mock Exam Portal</h1>
     <div class="flex gap-3">
       <button onclick="toggleTheme()" class="px-4 py-2 rounded-2xl bg-white dark:bg-slate-800 shadow-lg">🌙 / ☀️</button>
@@ -30,29 +27,32 @@ tailwind.config = { darkMode: 'class' }
     </div>
   </div>
 
-  <div id="home" class="space-y-5 fade-in">
+  <!-- Home -->
+  <div id="home" class="space-y-5">
     <div class="grid md:grid-cols-2 gap-5">
-      <button onclick="selectExam('servicenow')" class="p-6 rounded-3xl bg-gradient-to-r from-pink-500 to-rose-500 text-white shadow-xl hover:scale-[1.02] transition">
+      <button onclick="selectExam('servicenow')" class="p-6 rounded-3xl bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-xl hover:scale-[1.02] transition">
         <h2 class="text-2xl font-bold">ServiceNow CIS-CSM</h2>
       </button>
-      <button onclick="selectExam('aws')" class="p-6 rounded-3xl bg-gradient-to-r from-fuchsia-500 to-pink-600 text-white shadow-xl hover:scale-[1.02] transition">
+      <button onclick="selectExam('aws')" class="p-6 rounded-3xl bg-gradient-to-r from-orange-500 to-red-500 text-white shadow-xl hover:scale-[1.02] transition">
         <h2 class="text-2xl font-bold">AWS DEA-C01</h2>
       </button>
     </div>
   </div>
 
-  <div id="setup" class="hidden bg-white dark:bg-slate-800 rounded-3xl shadow-2xl p-6 mt-6 fade-in">
-    <div class="flex flex-col md:flex-row md:justify-between gap-4 md:items-center">
+  <!-- Setup -->
+  <div id="setup" class="hidden bg-white dark:bg-slate-800 rounded-3xl shadow-2xl p-6 mt-6">
+    <div class="flex justify-between items-center">
       <h2 id="examTitle" class="text-2xl md:text-3xl font-bold"></h2>
-      <button onclick="goHome()" class="px-5 py-3 rounded-2xl bg-pink-700 text-white">🏠 Home</button>
+      <button onclick="goHome()" class="px-5 py-3 rounded-2xl bg-slate-900 text-white">🏠 Home</button>
     </div>
     <div class="mt-6 flex flex-col md:flex-row gap-4">
       <input id="questionCount" type="number" min="1" placeholder="Enter question count" class="border rounded-2xl px-4 py-4 text-lg w-full md:w-72 text-black" />
-      <button onclick="startExam()" class="bg-pink-600 text-white px-6 py-4 rounded-2xl font-semibold">🚀 Start Exam</button>
+      <button onclick="startExam()" class="bg-green-600 text-white px-6 py-4 rounded-2xl font-semibold">🚀 Start Exam</button>
     </div>
   </div>
 
-  <div id="exam" class="hidden mt-6 fade-in">
+  <!-- Exam -->
+  <div id="exam" class="hidden mt-6">
     <div class="bg-white dark:bg-slate-800 rounded-3xl shadow-2xl p-4 md:p-8">
       <div class="flex justify-between items-center mb-6">
         <h2 id="runningExamTitle" class="text-xl md:text-2xl font-bold"></h2>
@@ -65,11 +65,12 @@ tailwind.config = { darkMode: 'class' }
       <div class="flex flex-wrap gap-3 mt-8">
         <button onclick="prevQuestion()" class="px-5 py-3 rounded-2xl border">⬅ Previous</button>
         <button onclick="nextQuestion()" class="px-5 py-3 rounded-2xl bg-slate-900 text-white">Next ➜</button>
-        <button onclick="submitExam()" class="px-5 py-3 rounded-2xl bg-rose-600 text-white">✅ Submit</button>
+        <button onclick="submitExam()" class="px-5 py-3 rounded-2xl bg-green-600 text-white">✅ Submit</button>
       </div>
     </div>
   </div>
 
+  <!-- Result -->
   <div id="result" class="hidden mt-6"></div>
 </div>
 
@@ -98,154 +99,105 @@ function createHeart(){
   heart.innerText=icons[Math.floor(Math.random()*icons.length)];
   heart.style.left=Math.random()*100+'vw';
   heart.style.bottom='-40px';
-  heart.style.animationDuration=(4+Math.random()*4)+'s';
   document.body.appendChild(heart);
-
   setTimeout(()=>heart.remove(),7000);
 }
 
 function toggleLoveMode(){
+  loveMode=!loveMode;
   const body=document.getElementById('appBody');
   const title=document.getElementById('appTitle');
-  loveMode=!loveMode;
 
   if(loveMode){
-    body.classList.remove(
-      'from-slate-100','via-slate-200','to-slate-100',
-      'dark:from-slate-950','dark:via-slate-900','dark:to-slate-950'
-    );
-
-    body.classList.add(
-      'from-pink-200','via-rose-200','to-red-200'
-    );
-
+    body.classList.add('from-pink-200','via-rose-200','to-red-200');
     title.innerText='💖 Love Mode Mock Exam Portal';
     document.getElementById('loveBtn').innerText='💔 Off';
-
-    if(!loveInterval){
-      loveInterval=setInterval(createHeart,500);
-    }
-  }else{
+    loveInterval=setInterval(createHeart,500);
+  } else {
     body.classList.remove('from-pink-200','via-rose-200','to-red-200');
-
-    body.classList.add(
-      'from-slate-100','via-slate-200','to-slate-100'
-    );
-
     title.innerText='⚡ Mock Exam Portal';
     document.getElementById('loveBtn').innerText='💖 Love';
-
     clearInterval(loveInterval);
-    loveInterval=null;
-
     document.querySelectorAll('.love-particle').forEach(el=>el.remove());
   }
 }
 
 async function selectExam(examKey){
   selectedExam=examKey;
-  const res=await fetch(exams[examKey].file);
-  allQuestions=await res.json();
-  home.classList.add('hidden');
-  setup.classList.remove('hidden');
-  examTitle.innerText=`${exams[examKey].title} (${allQuestions.length} Questions)`;
+  try{
+    const res=await fetch(exams[examKey].file);
+    allQuestions=await res.json();
+    document.getElementById('home').classList.add('hidden');
+    document.getElementById('setup').classList.remove('hidden');
+    document.getElementById('examTitle').innerText=`${exams[examKey].title} (${allQuestions.length} Questions)`;
+  }catch(err){
+    alert('Failed to load exam JSON. Check exams folder.');
+  }
 }
 
 function goHome(){
-  result.classList.add('hidden');
-  exam.classList.add('hidden');
-  setup.classList.add('hidden');
-  home.classList.remove('hidden');
+  document.getElementById('result').classList.add('hidden');
+  document.getElementById('exam').classList.add('hidden');
+  document.getElementById('setup').classList.add('hidden');
+  document.getElementById('home').classList.remove('hidden');
 }
 
-function shuffle(array){
-  return [...array].sort(()=>Math.random()-0.5);
-}
-
-function normalizeAndShuffleOptions(question){
-  const originalEntries = Object.entries(question.choices);
-  const shuffled = shuffle(originalEntries);
-  const labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
-
-  const newChoices = {};
-  let newAnswer = '';
-
-  shuffled.forEach(([oldKey,value],index)=>{
-    const newKey = labels[index];
-    newChoices[newKey] = value;
-
-    if(question.answer.includes(oldKey)){
-      newAnswer += newKey;
-    }
-  });
-
-  question.choices = newChoices;
-  question.answer = newAnswer.split('').sort().join('');
-
-  return question;
+function shuffle(arr){
+  return [...arr].sort(()=>Math.random()-0.5);
 }
 
 function startExam(){
-  const count=parseInt(questionCount.value);
+  const count=parseInt(document.getElementById('questionCount').value);
   if(!count || count<1 || count>allQuestions.length){
     alert('Enter valid count');
     return;
   }
 
-  questions = shuffle(allQuestions)
-    .slice(0,count)
-    .map(q=>normalizeAndShuffleOptions({...q}));
-
+  questions=shuffle(allQuestions).slice(0,count).map(q=>({...q}));
   userAnswers=[];
   currentIndex=0;
 
-  setup.classList.add('hidden');
-  exam.classList.remove('hidden');
-  runningExamTitle.innerText=exams[selectedExam].title;
+  document.getElementById('setup').classList.add('hidden');
+  document.getElementById('exam').classList.remove('hidden');
+  document.getElementById('runningExamTitle').innerText=exams[selectedExam].title;
 
   renderQuestion();
 }
 
 function renderQuestion(){
   const q=questions[currentIndex];
-  progress.innerText=`${currentIndex+1}/${questions.length}`;
-  question.innerText=q.question_text;
-  options.innerHTML='';
+  document.getElementById('progress').innerText=`${currentIndex+1}/${questions.length}`;
+  document.getElementById('question').innerText=q.question_text;
+
+  const optionsDiv=document.getElementById('options');
+  optionsDiv.innerHTML='';
 
   Object.entries(q.choices).forEach(([key,val])=>{
     const checked=(userAnswers[currentIndex]||'').includes(key);
-
-    options.innerHTML += `
-    <label class="option-card flex items-start gap-4 border rounded-2xl p-4 bg-white dark:bg-slate-700 shadow-sm cursor-pointer">
-      <input class="mt-1" type="${q.answer.length>1?'checkbox':'radio'}" name="option" value="${key}" ${checked?'checked':''}>
-      <div>
-        <div class="font-bold text-lg">${key}</div>
-        <div class="text-sm md:text-base leading-relaxed">${val}</div>
-      </div>
-    </label>`;
+    optionsDiv.innerHTML += `
+      <label class="option-card flex items-start gap-4 border rounded-2xl p-4 bg-white dark:bg-slate-700 shadow-sm cursor-pointer">
+        <input class="mt-1" type="${q.answer.length>1?'checkbox':'radio'}" name="option" value="${key}" ${checked?'checked':''}>
+        <div>
+          <div class="font-bold text-lg">${key}</div>
+          <div>${val}</div>
+        </div>
+      </label>`;
   });
 }
 
 function saveCurrentAnswer(){
-  const selected=[...document.querySelectorAll('input[name="option"]:checked')]
+  userAnswers[currentIndex]=[...document.querySelectorAll('input[name="option"]:checked')]
     .map(x=>x.value).sort().join('');
-  userAnswers[currentIndex]=selected;
 }
 
 function nextQuestion(){
   saveCurrentAnswer();
-  if(currentIndex<questions.length-1){
-    currentIndex++;
-    renderQuestion();
-  }
+  if(currentIndex<questions.length-1){ currentIndex++; renderQuestion(); }
 }
 
 function prevQuestion(){
   saveCurrentAnswer();
-  if(currentIndex>0){
-    currentIndex--;
-    renderQuestion();
-  }
+  if(currentIndex>0){ currentIndex--; renderQuestion(); }
 }
 
 function toggleOptions(index){
@@ -253,134 +205,72 @@ function toggleOptions(index){
 }
 
 function showReviewSection(type){
-  const correctSection = document.getElementById('correct-section');
-  const wrongSection = document.getElementById('wrong-section');
-
-  const correctBtn = document.getElementById('correct-btn');
-  const wrongBtn = document.getElementById('wrong-btn');
-
-  if(type === 'correct'){
-    correctSection.classList.remove('hidden');
-    wrongSection.classList.add('hidden');
-
-    correctBtn.classList.add('bg-green-600','text-white');
-    correctBtn.classList.remove('border');
-
-    wrongBtn.classList.remove('bg-red-600','text-white');
-    wrongBtn.classList.add('border');
-  } else {
-    wrongSection.classList.remove('hidden');
-    correctSection.classList.add('hidden');
-
-    wrongBtn.classList.add('bg-red-600','text-white');
-    wrongBtn.classList.remove('border');
-
-    correctBtn.classList.remove('bg-green-600','text-white');
-    correctBtn.classList.add('border');
-  }
-}`).classList.toggle('hidden');
+  document.getElementById('wrong-section').classList.toggle('hidden', type!=='wrong');
+  document.getElementById('correct-section').classList.toggle('hidden', type!=='correct');
 }
 
 function submitExam(){
   saveCurrentAnswer();
+  let score=0, correctHTML='', wrongHTML='';
 
-  let score = 0;
-  let correctHTML = '';
-  let wrongHTML = '';
+  questions.forEach((q,index)=>{
+    const correct=q.answer.split('').sort().join('');
+    const user=(userAnswers[index]||'').split('').sort().join('');
 
-  questions.forEach((q, index) => {
-    const correct = q.answer.split('').sort().join('');
-    const user = (userAnswers[index] || '').split('').sort().join('');
-
-    let optionsHtml = '';
-
-    Object.entries(q.choices).forEach(([key, val]) => {
-      const isCorrect = correct.includes(key);
-      const isUser = user.includes(key);
-
-      optionsHtml += `
-        <div class="p-3 rounded-xl mb-2 ${isCorrect ? 'bg-green-100 text-green-800' : 'bg-slate-100 dark:bg-slate-700'} ${isUser && !isCorrect ? 'border-2 border-red-500' : ''}">
-          <strong>${key}</strong> - ${val}
-        </div>`;
+    let optionsHtml='';
+    Object.entries(q.choices).forEach(([key,val])=>{
+      const isCorrect=correct.includes(key);
+      const isUser=user.includes(key);
+      optionsHtml += `<div class="p-3 rounded-xl mb-2 ${isCorrect?'bg-green-100':'bg-slate-100'} ${isUser&&!isCorrect?'border-2 border-red-500':''}"><strong>${key}</strong> - ${val}</div>`;
     });
 
-    const questionBlock = `
-      <div class="bg-white dark:bg-slate-800 rounded-3xl shadow-xl p-6 mb-6 fade-in">
+    const block=`
+      <div class="bg-white dark:bg-slate-800 rounded-3xl shadow-xl p-6 mb-6">
         <h3 class="font-bold text-xl mb-4">Q${index+1}</h3>
-        <p class="mb-5 leading-relaxed">${q.question_text}</p>
-
-        <button onclick="toggleOptions(${index})" class="mb-4 px-4 py-2 rounded-xl bg-pink-500 text-white">
-          👀 View Options
-        </button>
-
-        <div id="options-review-${index}" class="hidden">
-          ${optionsHtml}
-        </div>
-
-        <p class="mt-4"><strong>Your Answer:</strong> ${user || 'Not Answered'}</p>
+        <p class="mb-5">${q.question_text}</p>
+        <button onclick="toggleOptions(${index})" class="mb-4 px-4 py-2 rounded-xl bg-pink-500 text-white">👀 View Options</button>
+        <div id="options-review-${index}" class="hidden">${optionsHtml}</div>
+        <p><strong>Your Answer:</strong> ${user || 'Not Answered'}</p>
         <p><strong>Correct Answer:</strong> ${correct}</p>
       </div>`;
 
-    if (correct === user) {
-      score++;
-      correctHTML += questionBlock;
-    } else {
-      wrongHTML += questionBlock;
-    }
+    if(correct===user){ score++; correctHTML+=block; }
+    else { wrongHTML+=block; }
   });
 
-  const percentage = ((score / questions.length) * 100).toFixed(2);
-  const status = percentage >= 70 ? 'PASS' : 'FAIL';
+  const percentage=((score/questions.length)*100).toFixed(2);
 
-  exam.classList.add('hidden');
+  document.getElementById('exam').classList.add('hidden');
+  const result=document.getElementById('result');
   result.classList.remove('hidden');
 
-  result.innerHTML = `
+  result.innerHTML=`
     <div class="bg-white dark:bg-slate-800 rounded-3xl shadow-2xl p-8">
-      <div class="flex flex-wrap gap-3 justify-between items-center">
-        <h2 class="text-3xl font-bold">🎯 Exam Completed</h2>
-        <div class="flex gap-3">
-          <button onclick="retryWrongQuestions()" class="bg-rose-500 text-white px-4 py-3 rounded-2xl">Retry Wrong</button>
-          <button onclick="goHome()" class="bg-slate-900 text-white px-4 py-3 rounded-2xl">🏠 Home</button>
-        </div>
+      <h2 class="text-3xl font-bold">🎯 Exam Completed</h2>
+      <div class="grid md:grid-cols-2 gap-4 mt-6">
+        <div class="p-4 bg-green-100 rounded-xl">Correct: ${score}</div>
+        <div class="p-4 bg-red-100 rounded-xl">Wrong: ${questions.length-score}</div>
+        <div class="p-4 bg-blue-100 rounded-xl">Percentage: ${percentage}%</div>
       </div>
-
-      <div class="grid md:grid-cols-2 gap-5 mt-8">
-        <div class="p-5 rounded-2xl bg-green-100 text-green-900">Correct: ${score}</div>
-        <div class="p-5 rounded-2xl bg-red-100 text-red-900">Wrong: ${questions.length-score}</div>
-        <div class="p-5 rounded-2xl bg-blue-100 text-blue-900">Percentage: ${percentage}%</div>
-        <div class="p-5 rounded-2xl bg-purple-100 text-purple-900">Status: ${status}</div>
+      <div class="flex gap-4 mt-6">
+        <button onclick="retryWrongQuestions()" class="bg-red-600 text-white px-4 py-3 rounded-2xl">Retry Wrong</button>
+        <button onclick="goHome()" class="bg-slate-900 text-white px-4 py-3 rounded-2xl">🏠 Home</button>
       </div>
     </div>
 
     <div class="mt-8">
-      <div class="flex flex-wrap gap-4 mb-6">
-        <button id="wrong-btn"
-          onclick="showReviewSection('wrong')"
-          class="px-5 py-3 rounded-2xl bg-red-600 text-white font-semibold">
-          ❌ Wrong Answers
-        </button>
-
-        <button id="correct-btn"
-          onclick="showReviewSection('correct')"
-          class="px-5 py-3 rounded-2xl border font-semibold">
-          ✅ Correct Answers
-        </button>
+      <div class="flex gap-4 mb-6">
+        <button onclick="showReviewSection('wrong')" class="px-5 py-3 rounded-2xl bg-red-600 text-white">❌ Wrong Answers</button>
+        <button onclick="showReviewSection('correct')" class="px-5 py-3 rounded-2xl bg-green-600 text-white">✅ Correct Answers</button>
       </div>
 
-      <div id="wrong-section">
-        ${wrongHTML || '<div class="bg-white rounded-3xl p-6 shadow-xl">No wrong answers 🎉</div>'}
-      </div>
-
-      <div id="correct-section" class="hidden">
-        ${correctHTML || '<div class="bg-white rounded-3xl p-6 shadow-xl">No correct answers</div>'}
-      </div>
+      <div id="wrong-section">${wrongHTML || '<div>No wrong answers 🎉</div>'}</div>
+      <div id="correct-section" class="hidden">${correctHTML || '<div>No correct answers</div>'}</div>
     </div>`;
 }
 
 function retryWrongQuestions(){
   const wrong=[];
-
   questions.forEach((q,index)=>{
     const correct=q.answer.split('').sort().join('');
     const user=(userAnswers[index]||'').split('').sort().join('');
@@ -391,8 +281,8 @@ function retryWrongQuestions(){
   userAnswers=[];
   currentIndex=0;
 
-  result.classList.add('hidden');
-  exam.classList.remove('hidden');
+  document.getElementById('result').classList.add('hidden');
+  document.getElementById('exam').classList.remove('hidden');
   renderQuestion();
 }
 </script>
