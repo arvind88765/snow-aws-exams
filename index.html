@@ -29,12 +29,18 @@
 
   <!-- Home -->
   <div id="home" class="space-y-5">
-    <div class="grid md:grid-cols-2 gap-5">
+    <div class="grid md:grid-cols-3 gap-5">
       <button onclick="selectExam('servicenow')" class="p-6 rounded-3xl bg-gradient-to-r from-blue-500 to-indigo-600 text-white shadow-xl hover:scale-[1.02] transition">
         <h2 class="text-2xl font-bold">ServiceNow CIS-CSM</h2>
+        <p class="mt-2 text-sm opacity-80">Customer Service Management</p>
       </button>
       <button onclick="selectExam('aws')" class="p-6 rounded-3xl bg-gradient-to-r from-orange-500 to-red-500 text-white shadow-xl hover:scale-[1.02] transition">
         <h2 class="text-2xl font-bold">AWS DEA-C01</h2>
+        <p class="mt-2 text-sm opacity-80">Data Engineer Associate</p>
+      </button>
+      <button onclick="selectExam('clf')" class="p-6 rounded-3xl bg-gradient-to-r from-yellow-400 to-orange-400 text-white shadow-xl hover:scale-[1.02] transition">
+        <h2 class="text-2xl font-bold">AWS CLF-C02</h2>
+        <p class="mt-2 text-sm opacity-80">Cloud Practitioner</p>
       </button>
     </div>
   </div>
@@ -85,7 +91,8 @@ let loveInterval=null;
 
 const exams={
   servicenow:{title:"ServiceNow CIS-CSM",file:"exams/servicenow.json"},
-  aws:{title:"AWS DEA-C01",file:"exams/aws.json"}
+  aws:{title:"AWS DEA-C01",file:"exams/aws.json"},
+  clf:{title:"AWS CLF-C02",file:"exams/clf.json"}
 };
 
 function toggleTheme(){
@@ -126,7 +133,8 @@ async function selectExam(examKey){
   selectedExam=examKey;
   try{
     const res=await fetch(exams[examKey].file);
-    allQuestions=await res.json();
+    const raw=await res.json();
+    allQuestions=raw.questions||raw; // handles both wrapped and flat array
     document.getElementById('home').classList.add('hidden');
     document.getElementById('setup').classList.remove('hidden');
     document.getElementById('examTitle').innerText=`${exams[examKey].title} (${allQuestions.length} Questions)`;
@@ -149,7 +157,7 @@ function shuffle(arr){
 function startExam(){
   const count=parseInt(document.getElementById('questionCount').value);
   if(!count || count<1 || count>allQuestions.length){
-    alert('Enter valid count');
+    alert(`Enter a valid count between 1 and ${allQuestions.length}`);
     return;
   }
 
